@@ -3,39 +3,69 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Kamil — Computer Science student at the University of Wrocław (II UWr). Security writeups, algorithmic solutions, and coursework.">
-  <title>Kamil — Security Writeups &amp; Code</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta name="description" content="Kamil — Computer Science student at the University of Wrocław (II UWr). Security writeups, HTB stats, LeetCode solutions, and live activity.">
+  <title>Kamil — Security Writeups, HTB Stats &amp; Code</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
 
-  <div class="ambient-glow" aria-hidden="true"></div>
+  <!-- Colorful multi-layered ambient background -->
+  <div class="ambient-bg" aria-hidden="true">
+    <div class="blob blob-blue"></div>
+    <div class="blob blob-emerald"></div>
+    <div class="blob blob-purple"></div>
+  </div>
 
   <header class="site-header">
     <div class="container header-inner">
       <a href="#/" class="site-brand" aria-label="Home">
-        <span class="brand-dot"></span>
-        <span>Kamil</span>
+        <span class="brand-badge">KM</span>
+        <span class="brand-text">Kamil<span class="brand-accent">.sec</span></span>
       </a>
 
       <nav aria-label="Primary navigation" class="main-nav">
         <ul class="nav-list">
-          <li><a href="#/" class="nav-link active" data-nav="home" id="nav-home">Overview</a></li>
-          <li><a href="#/section/overthewire" class="nav-link" data-nav="overthewire">OverTheWire</a></li>
-          <li><a href="#/section/picoctf" class="nav-link" data-nav="picoctf">PicoCTF</a></li>
-          <li><a href="#/section/htb" class="nav-link" data-nav="htb">HackTheBox</a></li>
-          <li><a href="#/section/tcm-peh" class="nav-link" data-nav="tcm-peh">TCM Lab</a></li>
-          <li><a href="#/section/leetcode" class="nav-link" data-nav="leetcode">LeetCode</a></li>
+          <li>
+            <a href="#/" class="nav-link active" data-nav="home" id="nav-home">
+              <span class="nav-dot dot-blue"></span>Overview
+            </a>
+          </li>
+          <li>
+            <a href="#/section/overthewire" class="nav-link" data-nav="overthewire">
+              <span class="nav-dot dot-emerald"></span>OverTheWire
+            </a>
+          </li>
+          <li>
+            <a href="#/section/picoctf" class="nav-link" data-nav="picoctf">
+              <span class="nav-dot dot-cyan"></span>PicoCTF
+            </a>
+          </li>
+          <li>
+            <a href="#/section/htb" class="nav-link" data-nav="htb">
+              <span class="nav-dot dot-lime"></span>HackTheBox
+            </a>
+          </li>
+          <li>
+            <a href="#/section/tcm-peh" class="nav-link" data-nav="tcm-peh">
+              <span class="nav-dot dot-rose"></span>TCM Lab
+            </a>
+          </li>
+          <li>
+            <a href="#/section/leetcode" class="nav-link" data-nav="leetcode">
+              <span class="nav-dot dot-amber"></span>LeetCode
+            </a>
+          </li>
         </ul>
       </nav>
 
       <div class="header-actions">
-        <a href="https://github.com/KamilMONTANA" target="_blank" rel="noopener noreferrer" class="header-icon-btn" id="nav-github" title="GitHub Profile">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+        <a href="https://github.com/KamilMONTANA" target="_blank" rel="noopener noreferrer" class="header-icon-btn" id="nav-github">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
           <span>GitHub</span>
         </a>
       </div>
@@ -44,48 +74,63 @@
 
   <main class="container main-content">
 
-    <!-- VIEW 1: HOME (ABOUT ME + SECTION SHORTCUTS) -->
+    <!-- VIEW 1: HOME (HERO + STATS & ACTIVITY + SECTION CARDS) -->
     <section id="view-home" class="view active" aria-labelledby="about-heading">
+
+      <!-- HERO CARD -->
       <div class="hero-card">
-        <div class="hero-status">
-          <span class="pulse-dot"></span>
-          <span>B.Eng. Computer Science @ University of Wrocław (II UWr)</span>
+        <div class="hero-top-row">
+          <div class="hero-status">
+            <span class="pulse-dot"></span>
+            <span>B.Eng. Computer Science @ University of Wrocław (II UWr)</span>
+          </div>
+          <div class="hero-quick-counters">
+            <div class="mini-stat">
+              <span class="mini-stat-val" id="stat-total-files">--</span>
+              <span class="mini-stat-label">Published Files</span>
+            </div>
+            <div class="mini-stat">
+              <span class="mini-stat-val">6</span>
+              <span class="mini-stat-label">Active Repos</span>
+            </div>
+          </div>
         </div>
 
-        <h1 id="about-heading">Hi, I'm <span class="gradient-text">Kamil</span>.</h1>
+        <h1 id="about-heading">Hi, I'm <span class="gradient-text">Kamil</span> 👋</h1>
 
         <p class="about-text">
           First-year Computer Science student at the Institute of Computer Science (II UWr). 
-          Building a strong foundation in algorithms, Python, and low-level systems while documenting my offensive security progress across wargames, CTFs, and Active Directory labs.
+          Here I document my hands-on offensive security journey across <strong>OverTheWire</strong>, <strong>PicoCTF</strong>, <strong>HackTheBox</strong>, and <strong>Active Directory labs</strong>, alongside daily <strong>LeetCode</strong> practice and <strong>Python</strong> coursework.
         </p>
 
         <div class="profile-links">
-          <a href="https://github.com/KamilMONTANA" target="_blank" rel="noopener noreferrer" class="pill-link pill-primary" id="hero-github">
+          <a href="https://github.com/KamilMONTANA" target="_blank" rel="noopener noreferrer" class="pill-link pill-blue" id="hero-github">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
             <span>GitHub Profile</span>
             <span class="arrow">↗</span>
           </a>
-          <a href="https://app.hackthebox.com" target="_blank" rel="noopener noreferrer" class="pill-link" id="hero-htb">
+          <a href="https://app.hackthebox.com" target="_blank" rel="noopener noreferrer" class="pill-link pill-lime" id="hero-htb">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9fef00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-            <span>HackTheBox Profile</span>
+            <span>HackTheBox</span>
             <span class="arrow">↗</span>
           </a>
-          <a href="https://leetcode.com/u/KamilMONTANA/" target="_blank" rel="noopener noreferrer" class="pill-link" id="hero-leetcode">
+          <a href="https://leetcode.com/u/KamilMONTANA/" target="_blank" rel="noopener noreferrer" class="pill-link pill-amber" id="hero-leetcode">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-            <span>LeetCode Profile</span>
+            <span>LeetCode</span>
             <span class="arrow">↗</span>
           </a>
         </div>
       </div>
 
+      <!-- SECTION SHORTCUTS GRID (MOVED UP FOR IMMEDIATE ACCESS) -->
       <div class="sections-block">
         <div class="section-header-row">
           <div>
-            <h2 class="section-heading">Writeups, Labs &amp; Code</h2>
-            <p class="section-sub">Select a category below to browse live files and writeups synced from my GitHub repositories.</p>
+            <h2 class="section-heading">📂 Writeups, Labs &amp; Code Repositories</h2>
+            <p class="section-sub">Click any card to open the live writeup reader synced directly with GitHub.</p>
           </div>
           <span class="live-sync-pill">
-            <span class="sync-dot"></span> Live GitHub API
+            <span class="sync-dot"></span> Auto-Synced via GitHub API
           </span>
         </div>
 
@@ -93,6 +138,139 @@
           <!-- Populated dynamically from CONFIG in script.js -->
         </div>
       </div>
+
+      <!-- LIVE TELEMETRY: HTB STATS, LEETCODE & GITHUB ACTIVITY -->
+      <div class="dashboard-block">
+        <div class="section-header-row">
+          <div>
+            <h2 class="section-heading">⚡ Live Progress, HTB Stats &amp; Activity</h2>
+            <p class="section-sub">Real-time security progress, algorithmic stats, and latest GitHub commits.</p>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <!-- PANEL 1: HACKTHEBOX & SECURITY PROGRESS -->
+          <div class="stat-panel panel-htb">
+            <div class="panel-header">
+              <div class="panel-title-group">
+                <span class="panel-badge badge-lime">HTB &amp; CTF</span>
+                <h3>Offensive Security Progress</h3>
+              </div>
+              <a href="https://app.hackthebox.com" target="_blank" rel="noopener noreferrer" class="panel-ext" id="panel-htb-link">HTB Profile ↗</a>
+            </div>
+
+            <div class="htb-rank-box">
+              <div class="htb-cube-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#9fef00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+              </div>
+              <div class="htb-rank-info">
+                <div class="htb-rank-label">Current Track</div>
+                <div class="htb-rank-value" id="htb-rank-display">Starting Point &amp; Wargames</div>
+              </div>
+              <div class="htb-status-tag">ACTIVE</div>
+            </div>
+
+            <div class="progress-list">
+              <div class="progress-item">
+                <div class="progress-top">
+                  <span class="progress-name">OverTheWire: Bandit (34 Levels)</span>
+                  <span class="progress-val" id="prog-bandit-text">0 / 34</span>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill fill-emerald" id="prog-bandit-bar" style="width: 6%;"></div>
+                </div>
+              </div>
+
+              <div class="progress-item">
+                <div class="progress-top">
+                  <span class="progress-name">PicoCTF Writeups Published</span>
+                  <span class="progress-val" id="prog-pico-text">0 solved</span>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill fill-cyan" id="prog-pico-bar" style="width: 6%;"></div>
+                </div>
+              </div>
+
+              <div class="progress-item">
+                <div class="progress-top">
+                  <span class="progress-name">HackTheBox Retired Machines</span>
+                  <span class="progress-val" id="prog-htb-text">0 writeups</span>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill fill-lime" id="prog-htb-bar" style="width: 6%;"></div>
+                </div>
+              </div>
+
+              <div class="progress-item">
+                <div class="progress-top">
+                  <span class="progress-name">TCM AD Homelab Modules</span>
+                  <span class="progress-val" id="prog-tcm-text">In progress</span>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill fill-rose" id="prog-tcm-bar" style="width: 15%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PANEL 2: LEETCODE & GITHUB STATS CARD -->
+          <div class="stat-panel panel-leetcode">
+            <div class="panel-header">
+              <div class="panel-title-group">
+                <span class="panel-badge badge-amber">ALGORITHMS</span>
+                <h3>LeetCode &amp; Coding Telemetry</h3>
+              </div>
+              <a href="#/section/leetcode" class="panel-ext">View Solutions →</a>
+            </div>
+
+            <div class="visual-cards-stack">
+              <img
+                src="https://leetcard.jacoblin.cool/KamilMONTANA?theme=dark&font=JetBrains%20Mono&ext=heatmap"
+                alt="LeetCode Statistics for KamilMONTANA"
+                class="telemetry-img"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- PANEL 3: LIVE GITHUB ACTIVITY FEED & CONTRIBUTION HEATMAP -->
+        <div class="activity-row">
+          <div class="stat-panel panel-commits">
+            <div class="panel-header">
+              <div class="panel-title-group">
+                <span class="panel-badge badge-blue">LIVE FEED</span>
+                <h3>Recent GitHub Activity</h3>
+              </div>
+              <span class="mono-badge" id="activity-user-badge">@KamilMONTANA</span>
+            </div>
+            <div id="github-activity-feed" class="activity-feed">
+              <div class="state-box"><p>Loading recent commits from GitHub...</p></div>
+            </div>
+          </div>
+
+          <div class="stat-panel panel-heatmap">
+            <div class="panel-header">
+              <div class="panel-title-group">
+                <span class="panel-badge badge-purple">CONTRIBUTIONS</span>
+                <h3>GitHub Contribution Matrix</h3>
+              </div>
+            </div>
+            <div class="heatmap-wrap">
+              <img
+                src="https://ghchart.rshah.org/10b981/KamilMONTANA"
+                alt="KamilMONTANA's GitHub Contribution Chart"
+                class="heatmap-img"
+                loading="lazy"
+              />
+            </div>
+            <div class="repo-summary-pills" id="repo-summary-pills">
+              <!-- Populated dynamically with live repo push dates -->
+            </div>
+          </div>
+        </div>
+      </div>
+
     </section>
 
     <!-- VIEW 2: SECTION DIRECTORY BROWSER -->
@@ -156,13 +334,13 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <span>Kamil · Computer Science (B.Eng.) @ II UWr</span>
-      <span>Powered by GitHub Pages &amp; GitHub REST API</span>
+      <span>Live GitHub API Telemetry &amp; Writeup Reader</span>
     </div>
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.1/marked.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-  <script src="script.js"></script>
+  <script src="script.js?v=3"></script>
 </body>
 </html>

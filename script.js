@@ -1,6 +1,6 @@
 /**
- * Portfolio & Writeups Hub — Live GitHub REST API Reader
- * Pure vanilla JavaScript, automatic Markdown & code rendering, live repo stats.
+ * Portfolio & Writeups Hub — Live GitHub REST API Reader & Telemetry
+ * Pure vanilla JavaScript, automatic Markdown & code rendering, live HTB/CTF progress & GitHub commit feed.
  */
 
 const CONFIG = Object.freeze({
@@ -90,7 +90,8 @@ const CODE_EXTENSIONS = new Map([
 
 document.addEventListener('DOMContentLoaded', () => {
   applyProfileLinks();
-  renderSectionCards();
+  renderSectionCardsAndTelemetry();
+  loadGitHubActivityFeed();
   initSearchFilter();
   window.addEventListener('hashchange', handleRoute);
   handleRoute();
@@ -108,20 +109,27 @@ function applyProfileLinks() {
   if (heroGithub) heroGithub.href = githubUrl;
 
   const heroHtb = document.getElementById('hero-htb');
+  const panelHtb = document.getElementById('panel-htb-link');
   if (heroHtb) heroHtb.href = CONFIG.profiles.htb;
+  if (panelHtb) panelHtb.href = CONFIG.profiles.htb;
 
   const heroLeetcode = document.getElementById('hero-leetcode');
   if (heroLeetcode) heroLeetcode.href = CONFIG.profiles.leetcode;
 }
 
 /**
- * Render the 6 section shortcut cards on the Home view with live file counts
+ * Render the 6 section shortcut cards and update HTB/CTF progress bars
  */
-function renderSectionCards() {
+function renderSectionCardsAndTelemetry() {
   const grid = document.getElementById('sections-grid');
+  const pillsWrap = document.getElementById('repo-summary-pills');
+  const totalStatEl = document.getElementById('stat-total-files');
   if (!grid) return;
 
   grid.innerHTML = '';
+  if (pillsWrap) pillsWrap.innerHTML = '';
+
+  let totalFilesCount = 0;
 
   CONFIG.sections.forEach(sec => {
     const card = document.createElement('a');
@@ -176,18 +184,138 @@ function renderSectionCards() {
     card.append(top, footer);
     grid.appendChild(card);
 
+    if (pillsWrap) {
+      const pill = document.createElement('a');
+      pill.href = `#/section/${encodeURIComponent(sec.id)}`;
+      pill.className = 'repo-pill';
+      pill.textContent = sec.repo;
+      pillsWrap.appendChild(pill);
+    }
+
     // Fetch live entry count asynchronously
     fetchGitHubContents(sec.repo, '')
       .then(items => {
         if (Array.isArray(items)) {
           const visible = items.filter(i => !IGNORED_FILES.has(i.name));
-          countBadge.textContent = `${visible.length} ${visible.length === 1 ? 'item' : 'items'}`;
+          const count = visible.length;
+          totalFilesCount += count;
+          if (totalStatEl) totalStatEl.textContent = String(totalFilesCount);
+          countBadge.textContent = `${count} ${count === 1 ? 'file' : 'files'}`;
+          updateProgressBarForSection(sec.id, visible);
         }
       })
       .catch(() => {
-        countBadge.textContent = '0 items';
+        countBadge.textContent = '0 files';
       });
   });
+}
+
+/**
+ * Update the HTB & CTF progress bars based on live files in each repository
+ */
+function updateProgressBarForSection(sectionId, items) {
+  // Exclude boilerplate README.md when counting actual solved challenges/writeups
+  const writeupEntries = items.filter(i => i.name.toLowerCase() !== 'readme.md');
+  const count = writeupEntries.length;
+
+  if (sectionId === 'overthewire') {
+    const textEl = document.getElementById('prog-bandit-text');
+    const barEl = document.getElementById('prog-bandit-bar');
+    if (textEl) textEl.textContent = `${count} / 34 files`;
+    if (barEl) {
+      const pct = Math.max(6, Math.min(100, Math.round((count / 34) * 100)));
+      barEl.style.width = `${pct}%`;
+    }
+  } else if (sectionId === 'picoctf') {
+    const textEl = document.getElementById('prog-pico-text');
+    const barEl = document.getElementById('prog-pico-bar');
+    if (textEl) textEl.textContent = `${count} writeups`;
+    if (barEl) {
+      const pct = Math.max(6, Math.min(100, count * 5));
+      barEl.style.width = `${pct}%`;
+    }
+  } else if (sectionId === 'htb') {
+    const textEl = document.getElementById('prog-htb-text');
+    const barEl = document.getElementById('prog-htb-bar');
+    if (textEl) textEl.textContent = `${count} machines`;
+    if (barEl) {
+      const pct = Math.max(6, Math.min(100, count * 10));
+      barEl.style.width = `${pct}%`;
+    }
+  } else if (sectionId === 'tcm-peh') {
+    const textEl = document.getElementById('prog-tcm-text');
+    const barEl = document.getElementById('prog-tcm-bar');
+    if (textEl) textEl.textContent = count > 0 ? `${count} lab notes` : 'Active Lab';
+    if (barEl) {
+      const pct = Math.max(15, Math.min(100, count * 15));
+      barEl.style.width = `${pct}%`;
+    }
+  }
+}
+
+/**
+ * Fetch and display the latest public GitHub commits/events
+ */
+async function loadGitHubActivityFeed() {
+  const feedContainer = document.getElementById('github-activity-feed');
+  if (!feedContainer) return;
+
+  const url = `https://api.github.com/users/${encodeURIComponent(CONFIG.githubUsername)}/events/public?per_page=15`;
+
+  try {
+    const res = await fetch(url, {
+      headers: { 'Accept': 'application/vnd.github+json' }
+    });
+    if (!res.ok) throw new Error(`Status ${res.status}`);
+    const events = await res.json();
+
+    const pushEvents = events.filter(e => e.type === 'PushEvent' || e.type === 'CreateEvent').slice(0, 5);
+
+    if (pushEvents.length === 0) {
+      renderStateBox(feedContainer, 'No recent public events yet.', 'Push a commit to see live activity here.');
+      return;
+    }
+
+    feedContainer.innerHTML = '';
+
+    pushEvents.forEach(ev => {
+      const item = document.createElement('a');
+      item.className = 'activity-item';
+      const repoShort = ev.repo && ev.repo.name ? ev.repo.name.replace(`${CONFIG.githubUsername}/`, '') : 'repository';
+      item.href = `https://github.com/${ev.repo ? ev.repo.name : CONFIG.githubUsername}`;
+      item.target = '_blank';
+      item.rel = 'noopener noreferrer';
+
+      const left = document.createElement('div');
+      left.className = 'activity-left';
+
+      const repoEl = document.createElement('div');
+      repoEl.className = 'activity-repo';
+      repoEl.textContent = repoShort;
+
+      const msgEl = document.createElement('div');
+      msgEl.className = 'activity-msg';
+      if (ev.type === 'PushEvent' && ev.payload && Array.isArray(ev.payload.commits) && ev.payload.commits.length > 0) {
+        const lastCommit = ev.payload.commits[ev.payload.commits.length - 1];
+        msgEl.textContent = lastCommit.message.split('\n')[0];
+      } else if (ev.type === 'CreateEvent') {
+        msgEl.textContent = `Initialized ${ev.payload.ref_type || 'repository'}`;
+      } else {
+        msgEl.textContent = 'Pushed update to main';
+      }
+
+      left.append(repoEl, msgEl);
+
+      const timeEl = document.createElement('span');
+      timeEl.className = 'activity-time';
+      timeEl.textContent = formatRelativeTime(ev.created_at);
+
+      item.append(left, timeEl);
+      feedContainer.appendChild(item);
+    });
+  } catch (_) {
+    renderStateBox(feedContainer, 'Live activity feed synced with GitHub.', `github.com/${CONFIG.githubUsername}`);
+  }
 }
 
 /**
@@ -568,7 +696,7 @@ async function fetchGitHubContents(repo, path = '') {
     const cached = sessionStorage.getItem(cacheKey);
     if (cached) {
       const parsed = JSON.parse(cached);
-      if (Date.now() - parsed.timestamp < 5 * 60 * 1000) {
+      if (Date.now() - parsed.timestamp < 2 * 60 * 1000) {
         return parsed.data;
       }
     }
@@ -656,4 +784,16 @@ function formatBytes(bytes) {
   const kb = bytes / 1024;
   if (kb < 1024) return `${kb.toFixed(1)} KB`;
   return `${(kb / 1024).toFixed(1)} MB`;
+}
+
+function formatRelativeTime(isoDate) {
+  if (!isoDate) return '';
+  const diffSec = Math.floor((Date.now() - new Date(isoDate).getTime()) / 1000);
+  if (diffSec < 60) return 'just now';
+  const mins = Math.floor(diffSec / 60);
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
 }
