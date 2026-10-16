@@ -1,6 +1,5 @@
 /**
  * Portfolio & Writeups Hub — Live GitHub REST API Reader & Telemetry
- * Pure vanilla JavaScript, automatic Markdown & code rendering, live HTB/CTF progress & GitHub commit feed.
  */
 
 const CONFIG = Object.freeze({
@@ -14,56 +13,44 @@ const CONFIG = Object.freeze({
   sections: Object.freeze([
     Object.freeze({
       id: 'overthewire',
-      category: 'Wargames',
       title: 'OverTheWire',
       repo: 'overthewire-bandit',
       accent: '#10b981',
-      icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>',
       description: 'Linux command-line fundamentals, Bandit wargame solutions, shell pipelines, and file permissions.'
     }),
     Object.freeze({
       id: 'picoctf',
-      category: 'CTF Writeups',
       title: 'PicoCTF',
       repo: 'picoctf-writeups',
       accent: '#06b6d4',
-      icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>',
       description: 'Challenge walkthroughs and solve scripts across Web Exploitation, Cryptography, and Forensics.'
     }),
     Object.freeze({
       id: 'htb',
-      category: 'Retired Machines',
       title: 'HackTheBox',
       repo: 'htb-writeups',
       accent: '#9fef00',
-      icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>',
       description: 'Reconnaissance, enumeration, and privilege escalation documentation for retired HTB boxes.'
     }),
     Object.freeze({
       id: 'tcm-peh',
-      category: 'Active Directory Lab',
       title: 'TCM Ethical Hacking',
       repo: 'tcm-ad-homelab',
       accent: '#f43f5e',
-      icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
       description: 'Virtualized Windows Server AD homelab notes: LLMNR poisoning, AS-REP Roasting, Kerberoasting, and BloodHound.'
     }),
     Object.freeze({
       id: 'leetcode',
-      category: 'Algorithms',
       title: 'LeetCode',
       repo: 'leetcode-solutions',
       accent: '#f59e0b',
-      icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
       description: 'Daily algorithmic problem solving and data structure implementations in Python (synced via LeetHub).'
     }),
     Object.freeze({
       id: 'uwr-python',
-      category: 'II UWr · Semester 1',
-      title: 'Python Coursework',
+      title: 'Python Coursework (II UWr)',
       repo: 'uwr-python-coursework',
       accent: '#8b5cf6',
-      icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
       description: 'Programming assignments, algorithmic exercises, and lab tasks from the University of Wrocław.'
     })
   ])
@@ -97,9 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
   handleRoute();
 });
 
-/**
- * Sync header and hero profile links with CONFIG
- */
 function applyProfileLinks() {
   const githubUrl = `https://github.com/${encodeURIComponent(CONFIG.githubUsername)}`;
 
@@ -117,19 +101,11 @@ function applyProfileLinks() {
   if (heroLeetcode) heroLeetcode.href = CONFIG.profiles.leetcode;
 }
 
-/**
- * Render the 6 section shortcut cards and update HTB/CTF progress bars
- */
 function renderSectionCardsAndTelemetry() {
   const grid = document.getElementById('sections-grid');
-  const pillsWrap = document.getElementById('repo-summary-pills');
-  const totalStatEl = document.getElementById('stat-total-files');
   if (!grid) return;
 
   grid.innerHTML = '';
-  if (pillsWrap) pillsWrap.innerHTML = '';
-
-  let totalFilesCount = 0;
 
   CONFIG.sections.forEach(sec => {
     const card = document.createElement('a');
@@ -140,19 +116,6 @@ function renderSectionCardsAndTelemetry() {
 
     const top = document.createElement('div');
     top.className = 'card-top';
-
-    const headerLine = document.createElement('div');
-    headerLine.className = 'card-header-line';
-
-    const iconBox = document.createElement('div');
-    iconBox.className = 'card-icon-box';
-    iconBox.innerHTML = sec.icon;
-
-    const cat = document.createElement('span');
-    cat.className = 'card-category';
-    cat.textContent = sec.category;
-
-    headerLine.append(iconBox, cat);
 
     const title = document.createElement('div');
     title.className = 'card-title';
@@ -167,7 +130,7 @@ function renderSectionCardsAndTelemetry() {
     desc.className = 'card-desc';
     desc.textContent = sec.description;
 
-    top.append(headerLine, title, desc);
+    top.append(title, desc);
 
     const footer = document.createElement('div');
     footer.className = 'card-footer';
@@ -176,54 +139,39 @@ function renderSectionCardsAndTelemetry() {
     repoName.className = 'card-repo-name';
     repoName.textContent = sec.repo;
 
-    const countBadge = document.createElement('span');
-    countBadge.className = 'card-count-badge';
-    countBadge.textContent = 'Browse →';
+    const countText = document.createElement('span');
+    countText.className = 'card-count-text';
+    countText.textContent = '';
 
-    footer.append(repoName, countBadge);
+    footer.append(repoName, countText);
     card.append(top, footer);
     grid.appendChild(card);
 
-    if (pillsWrap) {
-      const pill = document.createElement('a');
-      pill.href = `#/section/${encodeURIComponent(sec.id)}`;
-      pill.className = 'repo-pill';
-      pill.textContent = sec.repo;
-      pillsWrap.appendChild(pill);
-    }
-
-    // Fetch live entry count asynchronously
     fetchGitHubContents(sec.repo, '')
       .then(items => {
         if (Array.isArray(items)) {
           const visible = items.filter(i => !IGNORED_FILES.has(i.name));
           const count = visible.length;
-          totalFilesCount += count;
-          if (totalStatEl) totalStatEl.textContent = String(totalFilesCount);
-          countBadge.textContent = `${count} ${count === 1 ? 'file' : 'files'}`;
+          countText.textContent = `${count} ${count === 1 ? 'file' : 'files'}`;
           updateProgressBarForSection(sec.id, visible);
         }
       })
       .catch(() => {
-        countBadge.textContent = '0 files';
+        countText.textContent = '0 files';
       });
   });
 }
 
-/**
- * Update the HTB & CTF progress bars based on live files in each repository
- */
 function updateProgressBarForSection(sectionId, items) {
-  // Exclude boilerplate README.md when counting actual solved challenges/writeups
   const writeupEntries = items.filter(i => i.name.toLowerCase() !== 'readme.md');
   const count = writeupEntries.length;
 
   if (sectionId === 'overthewire') {
     const textEl = document.getElementById('prog-bandit-text');
     const barEl = document.getElementById('prog-bandit-bar');
-    if (textEl) textEl.textContent = `${count} / 34 files`;
+    if (textEl) textEl.textContent = `${count} / 34`;
     if (barEl) {
-      const pct = Math.max(6, Math.min(100, Math.round((count / 34) * 100)));
+      const pct = Math.max(4, Math.min(100, Math.round((count / 34) * 100)));
       barEl.style.width = `${pct}%`;
     }
   } else if (sectionId === 'picoctf') {
@@ -231,7 +179,7 @@ function updateProgressBarForSection(sectionId, items) {
     const barEl = document.getElementById('prog-pico-bar');
     if (textEl) textEl.textContent = `${count} writeups`;
     if (barEl) {
-      const pct = Math.max(6, Math.min(100, count * 5));
+      const pct = Math.max(4, Math.min(100, count * 5));
       barEl.style.width = `${pct}%`;
     }
   } else if (sectionId === 'htb') {
@@ -239,23 +187,20 @@ function updateProgressBarForSection(sectionId, items) {
     const barEl = document.getElementById('prog-htb-bar');
     if (textEl) textEl.textContent = `${count} machines`;
     if (barEl) {
-      const pct = Math.max(6, Math.min(100, count * 10));
+      const pct = Math.max(4, Math.min(100, count * 10));
       barEl.style.width = `${pct}%`;
     }
   } else if (sectionId === 'tcm-peh') {
     const textEl = document.getElementById('prog-tcm-text');
     const barEl = document.getElementById('prog-tcm-bar');
-    if (textEl) textEl.textContent = count > 0 ? `${count} lab notes` : 'Active Lab';
+    if (textEl) textEl.textContent = `${count} notes`;
     if (barEl) {
-      const pct = Math.max(15, Math.min(100, count * 15));
+      const pct = Math.max(4, Math.min(100, count * 15));
       barEl.style.width = `${pct}%`;
     }
   }
 }
 
-/**
- * Fetch and display the latest public GitHub commits/events
- */
 async function loadGitHubActivityFeed() {
   const feedContainer = document.getElementById('github-activity-feed');
   if (!feedContainer) return;
@@ -272,7 +217,7 @@ async function loadGitHubActivityFeed() {
     const pushEvents = events.filter(e => e.type === 'PushEvent' || e.type === 'CreateEvent').slice(0, 5);
 
     if (pushEvents.length === 0) {
-      renderStateBox(feedContainer, 'No recent public events yet.', 'Push a commit to see live activity here.');
+      renderStateBox(feedContainer, 'No recent public commits yet.');
       return;
     }
 
@@ -314,13 +259,10 @@ async function loadGitHubActivityFeed() {
       feedContainer.appendChild(item);
     });
   } catch (_) {
-    renderStateBox(feedContainer, 'Live activity feed synced with GitHub.', `github.com/${CONFIG.githubUsername}`);
+    renderStateBox(feedContainer, 'Could not fetch recent events.');
   }
 }
 
-/**
- * Filter file rows inside Section view
- */
 function initSearchFilter() {
   const searchInput = document.getElementById('file-search-input');
   if (!searchInput) return;
@@ -336,9 +278,6 @@ function initSearchFilter() {
   });
 }
 
-/**
- * Client-side hash router
- */
 function handleRoute() {
   const rawHash = window.location.hash || '#/';
   const hash = rawHash.startsWith('#') ? rawHash.slice(1) : rawHash;
@@ -380,9 +319,6 @@ function handleRoute() {
   switchActiveView('view-home');
 }
 
-/**
- * Highlight active section in top Navbar
- */
 function updateActiveNav(activeKey) {
   document.querySelectorAll('.nav-link[data-nav]').forEach(link => {
     const key = link.getAttribute('data-nav');
@@ -390,9 +326,6 @@ function updateActiveNav(activeKey) {
   });
 }
 
-/**
- * Toggle visibility between the 3 primary views
- */
 function switchActiveView(viewId) {
   const views = ['view-home', 'view-section', 'view-reader'];
   views.forEach(id => {
@@ -410,25 +343,18 @@ function switchActiveView(viewId) {
   window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
-/**
- * Load directory contents for a section (or subfolder) from GitHub API
- */
 async function loadSectionView(section, dirPath) {
   switchActiveView('view-section');
 
   const bannerEl = document.getElementById('section-banner');
-  const iconWrapEl = document.getElementById('section-icon-wrap');
   const titleEl = document.getElementById('section-title');
-  const badgeEl = document.getElementById('section-repo-badge');
   const descEl = document.getElementById('section-description');
   const repoLinkEl = document.getElementById('section-repo-link');
   const searchInput = document.getElementById('file-search-input');
   const filesContainer = document.getElementById('section-files');
 
   if (bannerEl) bannerEl.style.setProperty('--section-accent', section.accent);
-  if (iconWrapEl) iconWrapEl.innerHTML = section.icon;
   if (titleEl) titleEl.textContent = section.title;
-  if (badgeEl) badgeEl.textContent = section.repo;
   if (descEl) descEl.textContent = section.description;
   if (searchInput) searchInput.value = '';
   if (repoLinkEl) {
@@ -439,28 +365,20 @@ async function loadSectionView(section, dirPath) {
   renderBreadcrumbs(section, dirPath);
 
   if (!filesContainer) return;
-  renderStateBox(filesContainer, 'Fetching repository contents from GitHub...', `${CONFIG.githubUsername}/${section.repo}`);
+  renderStateBox(filesContainer, 'Loading files...', `${CONFIG.githubUsername}/${section.repo}`);
 
   try {
     const items = await fetchGitHubContents(section.repo, dirPath);
 
     if (!Array.isArray(items)) {
-      renderStateBox(
-        filesContainer,
-        'No entries published in this repository yet.',
-        `Repository: github.com/${CONFIG.githubUsername}/${section.repo}`
-      );
+      renderStateBox(filesContainer, 'No entries in this repository yet.');
       return;
     }
 
     const filtered = items.filter(item => !IGNORED_FILES.has(item.name));
 
     if (filtered.length === 0) {
-      renderStateBox(
-        filesContainer,
-        'No entries published in this repository yet.',
-        `Push your first Markdown writeup or code file to ${CONFIG.githubUsername}/${section.repo} to see it here.`
-      );
+      renderStateBox(filesContainer, 'No entries in this repository yet.');
       return;
     }
 
@@ -487,45 +405,27 @@ async function loadSectionView(section, dirPath) {
       const left = document.createElement('div');
       left.className = 'file-row-left';
 
-      const icon = document.createElement('span');
-      icon.className = 'file-icon';
-      icon.innerHTML = item.type === 'dir'
-        ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>'
-        : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
-
       const name = document.createElement('span');
       name.className = 'file-name';
       name.textContent = item.type === 'dir' ? `${item.name}/` : item.name;
 
-      left.append(icon, name);
+      left.appendChild(name);
 
       const right = document.createElement('span');
       right.className = 'file-row-right';
-      right.textContent = item.type === 'dir' ? 'folder' : formatBytes(item.size);
+      right.textContent = item.type === 'dir' ? 'dir' : formatBytes(item.size);
 
       row.append(left, right);
       filesContainer.appendChild(row);
     });
   } catch (err) {
-    if (err.status === 404) {
-      renderStateBox(
-        filesContainer,
-        'No entries published in this repository yet.',
-        `Create public repository "${CONFIG.githubUsername}/${section.repo}" on GitHub and push files to populate this section.`
-      );
-    } else {
-      renderStateBox(
-        filesContainer,
-        'Could not load repository contents from GitHub API.',
-        err.message || 'Check your connection or GitHub API rate limit.'
-      );
-    }
+    renderStateBox(
+      filesContainer,
+      err.status === 404 ? 'No entries in this repository yet.' : 'Could not load repository contents.'
+    );
   }
 }
 
-/**
- * Render breadcrumb navigation for section & subdirectories
- */
 function renderBreadcrumbs(section, dirPath) {
   const nav = document.getElementById('section-breadcrumbs');
   if (!nav) return;
@@ -569,16 +469,12 @@ function renderBreadcrumbs(section, dirPath) {
   });
 }
 
-/**
- * Load and render an individual Markdown writeup or source code file
- */
 async function loadReaderView(section, filePath) {
   switchActiveView('view-reader');
 
   const backLink = document.getElementById('reader-back-link');
   const githubLink = document.getElementById('reader-github-link');
   const filepathEl = document.getElementById('reader-filepath');
-  const filetypeEl = document.getElementById('reader-filetype');
   const contentEl = document.getElementById('reader-content');
 
   const lastSlash = filePath.lastIndexOf('/');
@@ -587,28 +483,25 @@ async function loadReaderView(section, filePath) {
     backLink.href = parentDir
       ? `#/section/${encodeURIComponent(section.id)}/dir/${encodeURIComponent(parentDir)}`
       : `#/section/${encodeURIComponent(section.id)}`;
-    backLink.textContent = parentDir ? `← Back to ${parentDir}` : `← Back to ${section.title}`;
+    backLink.textContent = parentDir ? `← ${parentDir}` : `← ${section.title}`;
   }
 
   if (filepathEl) filepathEl.textContent = `${section.repo}/${filePath}`;
 
   const ext = getFileExtension(filePath);
-  if (filetypeEl) {
-    filetypeEl.textContent = ext === 'md' ? 'markdown' : (CODE_EXTENSIONS.get(ext) || ext || 'file');
-  }
 
   if (githubLink) {
     githubLink.href = `https://github.com/${encodeURIComponent(CONFIG.githubUsername)}/${encodeURIComponent(section.repo)}/blob/HEAD/${encodePathSegments(filePath)}`;
   }
 
   if (!contentEl) return;
-  renderStateBox(contentEl, 'Loading file from GitHub...', filePath);
+  renderStateBox(contentEl, 'Loading file...', filePath);
 
   try {
     const fileData = await fetchGitHubContents(section.repo, filePath);
 
     if (!fileData || Array.isArray(fileData)) {
-      renderStateBox(contentEl, 'File could not be displayed.', filePath);
+      renderStateBox(contentEl, 'File could not be displayed.');
       return;
     }
 
@@ -623,18 +516,11 @@ async function loadReaderView(section, filePath) {
     } else {
       renderSourceCodeContent(contentEl, rawText, ext);
     }
-  } catch (err) {
-    renderStateBox(
-      contentEl,
-      'Could not load file from GitHub.',
-      err.status === 404 ? 'File not found (404).' : (err.message || 'Check connection.')
-    );
+  } catch (_) {
+    renderStateBox(contentEl, 'Could not load file from GitHub.');
   }
 }
 
-/**
- * Render Markdown safely with DOMPurify and syntax highlighting
- */
 function renderMarkdownContent(container, markdownText, downloadUrl) {
   if (typeof marked === 'undefined' || typeof DOMPurify === 'undefined') {
     renderSourceCodeContent(container, markdownText, 'md');
@@ -666,9 +552,6 @@ function renderMarkdownContent(container, markdownText, downloadUrl) {
   }
 }
 
-/**
- * Render source code (.py, .sh, .c, etc.) inside a syntax-highlighted block
- */
 function renderSourceCodeContent(container, codeText, ext) {
   container.innerHTML = '';
   const pre = document.createElement('pre');
@@ -686,9 +569,6 @@ function renderSourceCodeContent(container, codeText, ext) {
   }
 }
 
-/**
- * Fetch repository contents from GitHub REST API with sessionStorage cache
- */
 async function fetchGitHubContents(repo, path = '') {
   const cleanPath = path ? `/${encodePathSegments(path)}` : '';
   const apiUrl = `https://api.github.com/repos/${encodeURIComponent(CONFIG.githubUsername)}/${encodeURIComponent(repo)}/contents${cleanPath}`;
@@ -702,14 +582,10 @@ async function fetchGitHubContents(repo, path = '') {
         return parsed.data;
       }
     }
-  } catch (_) {
-    // Ignore storage access errors
-  }
+  } catch (_) {}
 
   const response = await fetch(apiUrl, {
-    headers: {
-      'Accept': 'application/vnd.github+json'
-    }
+    headers: { 'Accept': 'application/vnd.github+json' }
   });
 
   if (!response.ok) {
@@ -725,16 +601,11 @@ async function fetchGitHubContents(repo, path = '') {
       timestamp: Date.now(),
       data
     }));
-  } catch (_) {
-    // Ignore quota errors
-  }
+  } catch (_) {}
 
   return data;
 }
 
-/**
- * Decode UTF-8 text from GitHub API file object
- */
 async function extractFileText(fileData) {
   if (fileData.content && fileData.encoding === 'base64') {
     const base64Clean = fileData.content.replace(/\s/g, '');
