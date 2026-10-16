@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kamil — Computer Science student at the University of Wrocław (II UWr). Security writeups, algorithmic solutions, and coursework.">
+  <title>Kamil — Writeups &amp; Code</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#/" class="site-brand" aria-label="Home">Kamil</a>
+      <nav aria-label="Primary navigation">
+        <ul class="nav-list">
+          <li><a href="#/" class="nav-link" id="nav-home">Overview</a></li>
+          <li><a href="https://github.com/KamilMONTANA" target="_blank" rel="noopener noreferrer" class="nav-link" id="nav-github">GitHub ↗</a></li>
+          <li><a href="https://app.hackthebox.com" target="_blank" rel="noopener noreferrer" class="nav-link" id="nav-htb">HackTheBox ↗</a></li>
+          <li><a href="https://leetcode.com" target="_blank" rel="noopener noreferrer" class="nav-link" id="nav-leetcode">LeetCode ↗</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container main-content">
+
+    <!-- VIEW 1: HOME (ABOUT ME + SECTION SHORTCUTS) -->
+    <section id="view-home" class="view active" aria-labelledby="about-heading">
+      <div class="about-block">
+        <p class="eyebrow">University of Wrocław · Institute of Computer Science (II UWr)</p>
+        <h1 id="about-heading">Hi, I'm Kamil.</h1>
+        <p class="about-text">
+          First-year Computer Science (B.Eng.) student at the University of Wrocław. 
+          I use this space as a central index for my security writeups (OverTheWire, PicoCTF, HackTheBox, Active Directory labs), daily LeetCode practice, and programming coursework in Python.
+        </p>
+        <div class="profile-links">
+          <a href="https://github.com/KamilMONTANA" target="_blank" rel="noopener noreferrer" class="pill-link" id="hero-github">
+            <span>GitHub Profile</span>
+            <span class="arrow">↗</span>
+          </a>
+          <a href="https://app.hackthebox.com" target="_blank" rel="noopener noreferrer" class="pill-link" id="hero-htb">
+            <span>HackTheBox</span>
+            <span class="arrow">↗</span>
+          </a>
+          <a href="https://leetcode.com" target="_blank" rel="noopener noreferrer" class="pill-link" id="hero-leetcode">
+            <span>LeetCode</span>
+            <span class="arrow">↗</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="sections-block">
+        <div class="section-header-row">
+          <h2 class="section-heading">Sections &amp; Writeups</h2>
+          <span class="section-hint">Synced directly from GitHub repositories</span>
+        </div>
+
+        <div id="sections-grid" class="sections-grid" role="list">
+          <!-- Populated dynamically from CONFIG in script.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: SECTION DIRECTORY BROWSER -->
+    <section id="view-section" class="view" hidden aria-labelledby="section-title">
+      <div class="view-topbar">
+        <a href="#/" class="back-link">← Overview</a>
+        <a href="#" target="_blank" rel="noopener noreferrer" id="section-repo-link" class="ext-repo-link">
+          View repository on GitHub ↗
+        </a>
+      </div>
+
+      <div class="section-intro">
+        <div class="section-title-row">
+          <h1 id="section-title">Section</h1>
+          <span id="section-repo-badge" class="mono-badge">repo</span>
+        </div>
+        <p id="section-description" class="section-desc"></p>
+      </div>
+
+      <nav id="section-breadcrumbs" class="breadcrumbs" aria-label="Directory path"></nav>
+
+      <div id="section-files" class="file-browser" aria-live="polite">
+        <!-- Populated dynamically via GitHub REST API -->
+      </div>
+    </section>
+
+    <!-- VIEW 3: MARKDOWN / CODE WRITEUP READER -->
+    <section id="view-reader" class="view" hidden aria-labelledby="reader-filepath">
+      <div class="view-topbar">
+        <a href="#/" id="reader-back-link" class="back-link">← Back to section</a>
+        <div class="reader-meta-actions">
+          <a href="#" target="_blank" rel="noopener noreferrer" id="reader-github-link" class="ext-repo-link">
+            Open file on GitHub ↗
+          </a>
+        </div>
+      </div>
+
+      <div class="reader-frame">
+        <div class="reader-frame-header">
+          <span id="reader-filepath" class="reader-filepath">file.md</span>
+          <span id="reader-filetype" class="mono-badge">markdown</span>
+        </div>
+        <article id="reader-content" class="markdown-body" aria-live="polite">
+          <!-- Rendered Markdown or syntax-highlighted source code -->
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>Kamil · Computer Science @ II UWr</span>
+      <span>Content synced via GitHub REST API</span>
+    </div>
+  </footer>
+
+  <!-- Lightweight, industry-standard Markdown parser, sanitizer, and syntax highlighter -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.1/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
