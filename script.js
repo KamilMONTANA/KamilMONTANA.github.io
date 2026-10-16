@@ -1,10 +1,9 @@
 /**
  * Portfolio & Writeups Hub — Live GitHub REST API Reader
- * Zero build step, pure vanilla JavaScript, automatic Markdown & code rendering.
+ * Pure vanilla JavaScript, automatic Markdown & code rendering, live repo stats.
  */
 
 const CONFIG = Object.freeze({
-  // Change this single field after updating your GitHub username
   githubUsername: 'KamilMONTANA',
 
   profiles: Object.freeze({
@@ -18,6 +17,8 @@ const CONFIG = Object.freeze({
       category: 'Wargames',
       title: 'OverTheWire',
       repo: 'overthewire-bandit',
+      accent: '#10b981',
+      icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>',
       description: 'Linux command-line fundamentals, Bandit wargame solutions, shell pipelines, and file permissions.'
     }),
     Object.freeze({
@@ -25,6 +26,8 @@ const CONFIG = Object.freeze({
       category: 'CTF Writeups',
       title: 'PicoCTF',
       repo: 'picoctf-writeups',
+      accent: '#06b6d4',
+      icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>',
       description: 'Challenge walkthroughs and solve scripts across Web Exploitation, Cryptography, and Forensics.'
     }),
     Object.freeze({
@@ -32,6 +35,8 @@ const CONFIG = Object.freeze({
       category: 'Retired Machines',
       title: 'HackTheBox',
       repo: 'htb-writeups',
+      accent: '#9fef00',
+      icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>',
       description: 'Reconnaissance, enumeration, and privilege escalation documentation for retired HTB boxes.'
     }),
     Object.freeze({
@@ -39,6 +44,8 @@ const CONFIG = Object.freeze({
       category: 'Active Directory Lab',
       title: 'TCM Ethical Hacking',
       repo: 'tcm-ad-homelab',
+      accent: '#f43f5e',
+      icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
       description: 'Virtualized Windows Server AD homelab notes: LLMNR poisoning, AS-REP Roasting, Kerberoasting, and BloodHound.'
     }),
     Object.freeze({
@@ -46,6 +53,8 @@ const CONFIG = Object.freeze({
       category: 'Algorithms',
       title: 'LeetCode',
       repo: 'leetcode-solutions',
+      accent: '#f59e0b',
+      icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
       description: 'Daily algorithmic problem solving and data structure implementations in Python (synced via LeetHub).'
     }),
     Object.freeze({
@@ -53,6 +62,8 @@ const CONFIG = Object.freeze({
       category: 'II UWr · Semester 1',
       title: 'Python Coursework',
       repo: 'uwr-python-coursework',
+      accent: '#8b5cf6',
+      icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
       description: 'Programming assignments, algorithmic exercises, and lab tasks from the University of Wrocław.'
     })
   ])
@@ -80,6 +91,7 @@ const CODE_EXTENSIONS = new Map([
 document.addEventListener('DOMContentLoaded', () => {
   applyProfileLinks();
   renderSectionCards();
+  initSearchFilter();
   window.addEventListener('hashchange', handleRoute);
   handleRoute();
 });
@@ -95,19 +107,15 @@ function applyProfileLinks() {
   if (navGithub) navGithub.href = githubUrl;
   if (heroGithub) heroGithub.href = githubUrl;
 
-  const navHtb = document.getElementById('nav-htb');
   const heroHtb = document.getElementById('hero-htb');
-  if (navHtb) navHtb.href = CONFIG.profiles.htb;
   if (heroHtb) heroHtb.href = CONFIG.profiles.htb;
 
-  const navLeetcode = document.getElementById('nav-leetcode');
   const heroLeetcode = document.getElementById('hero-leetcode');
-  if (navLeetcode) navLeetcode.href = CONFIG.profiles.leetcode;
   if (heroLeetcode) heroLeetcode.href = CONFIG.profiles.leetcode;
 }
 
 /**
- * Render the 6 section shortcut cards on the Home view
+ * Render the 6 section shortcut cards on the Home view with live file counts
  */
 function renderSectionCards() {
   const grid = document.getElementById('sections-grid');
@@ -119,49 +127,89 @@ function renderSectionCards() {
     const card = document.createElement('a');
     card.href = `#/section/${encodeURIComponent(sec.id)}`;
     card.className = 'section-card';
+    card.style.setProperty('--card-accent', sec.accent);
     card.setAttribute('role', 'listitem');
 
     const top = document.createElement('div');
     top.className = 'card-top';
 
+    const headerLine = document.createElement('div');
+    headerLine.className = 'card-header-line';
+
+    const iconBox = document.createElement('div');
+    iconBox.className = 'card-icon-box';
+    iconBox.innerHTML = sec.icon;
+
     const cat = document.createElement('span');
     cat.className = 'card-category';
     cat.textContent = sec.category;
+
+    headerLine.append(iconBox, cat);
 
     const title = document.createElement('div');
     title.className = 'card-title';
     const titleText = document.createElement('span');
     titleText.textContent = sec.title;
     const arrow = document.createElement('span');
+    arrow.className = 'card-arrow';
     arrow.textContent = '→';
-    arrow.style.color = 'var(--text-muted)';
     title.append(titleText, arrow);
 
     const desc = document.createElement('p');
     desc.className = 'card-desc';
     desc.textContent = sec.description;
 
-    top.append(cat, title, desc);
+    top.append(headerLine, title, desc);
 
     const footer = document.createElement('div');
     footer.className = 'card-footer';
+
     const repoName = document.createElement('span');
     repoName.className = 'card-repo-name';
-    repoName.textContent = `${CONFIG.githubUsername}/${sec.repo}`;
-    footer.appendChild(repoName);
+    repoName.textContent = sec.repo;
 
+    const countBadge = document.createElement('span');
+    countBadge.className = 'card-count-badge';
+    countBadge.textContent = 'Browse →';
+
+    footer.append(repoName, countBadge);
     card.append(top, footer);
     grid.appendChild(card);
+
+    // Fetch live entry count asynchronously
+    fetchGitHubContents(sec.repo, '')
+      .then(items => {
+        if (Array.isArray(items)) {
+          const visible = items.filter(i => !IGNORED_FILES.has(i.name));
+          countBadge.textContent = `${visible.length} ${visible.length === 1 ? 'item' : 'items'}`;
+        }
+      })
+      .catch(() => {
+        countBadge.textContent = '0 items';
+      });
+  });
+}
+
+/**
+ * Filter file rows inside Section view
+ */
+function initSearchFilter() {
+  const searchInput = document.getElementById('file-search-input');
+  if (!searchInput) return;
+
+  searchInput.addEventListener('input', () => {
+    const query = searchInput.value.trim().toLowerCase();
+    const rows = document.querySelectorAll('#section-files .file-row');
+    rows.forEach(row => {
+      const nameEl = row.querySelector('.file-name');
+      const name = nameEl ? nameEl.textContent.toLowerCase() : '';
+      row.style.display = !query || name.includes(query) ? 'flex' : 'none';
+    });
   });
 }
 
 /**
  * Client-side hash router
- * Supported routes:
- *  - #/
- *  - #/section/:id
- *  - #/section/:id/dir/:encodedPath
- *  - #/section/:id/file/:encodedPath
  */
 function handleRoute() {
   const rawHash = window.location.hash || '#/';
@@ -169,6 +217,7 @@ function handleRoute() {
   const parts = hash.split('/').filter(Boolean);
 
   if (parts.length === 0) {
+    updateActiveNav('home');
     switchActiveView('view-home');
     return;
   }
@@ -178,9 +227,12 @@ function handleRoute() {
     const section = CONFIG.sections.find(s => s.id === sectionId);
 
     if (!section) {
+      updateActiveNav('home');
       switchActiveView('view-home');
       return;
     }
+
+    updateActiveNav(section.id);
 
     const mode = parts[2];
     const encodedTarget = parts.slice(3).join('/');
@@ -196,7 +248,18 @@ function handleRoute() {
     return;
   }
 
+  updateActiveNav('home');
   switchActiveView('view-home');
+}
+
+/**
+ * Highlight active section in top Navbar
+ */
+function updateActiveNav(activeKey) {
+  document.querySelectorAll('.nav-link[data-nav]').forEach(link => {
+    const key = link.getAttribute('data-nav');
+    link.classList.toggle('active', key === activeKey);
+  });
 }
 
 /**
@@ -216,11 +279,6 @@ function switchActiveView(viewId) {
     }
   });
 
-  const navHome = document.getElementById('nav-home');
-  if (navHome) {
-    navHome.classList.toggle('active', viewId === 'view-home');
-  }
-
   window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
@@ -230,15 +288,21 @@ function switchActiveView(viewId) {
 async function loadSectionView(section, dirPath) {
   switchActiveView('view-section');
 
+  const bannerEl = document.getElementById('section-banner');
+  const iconWrapEl = document.getElementById('section-icon-wrap');
   const titleEl = document.getElementById('section-title');
   const badgeEl = document.getElementById('section-repo-badge');
   const descEl = document.getElementById('section-description');
   const repoLinkEl = document.getElementById('section-repo-link');
+  const searchInput = document.getElementById('file-search-input');
   const filesContainer = document.getElementById('section-files');
 
+  if (bannerEl) bannerEl.style.setProperty('--section-accent', section.accent);
+  if (iconWrapEl) iconWrapEl.innerHTML = section.icon;
   if (titleEl) titleEl.textContent = section.title;
   if (badgeEl) badgeEl.textContent = section.repo;
   if (descEl) descEl.textContent = section.description;
+  if (searchInput) searchInput.value = '';
   if (repoLinkEl) {
     const subUrl = dirPath ? `/tree/HEAD/${encodePathSegments(dirPath)}` : '';
     repoLinkEl.href = `https://github.com/${encodeURIComponent(CONFIG.githubUsername)}/${encodeURIComponent(section.repo)}${subUrl}`;
@@ -272,7 +336,6 @@ async function loadSectionView(section, dirPath) {
       return;
     }
 
-    // Sort directories first, then natural alphanumeric order (e.g. level2 before level10)
     const sorted = [...filtered].sort((a, b) => {
       if (a.type === b.type) {
         return a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' });
@@ -388,7 +451,6 @@ async function loadReaderView(section, filePath) {
   const filetypeEl = document.getElementById('reader-filetype');
   const contentEl = document.getElementById('reader-content');
 
-  // Determine parent directory for the Back button
   const lastSlash = filePath.lastIndexOf('/');
   const parentDir = lastSlash > 0 ? filePath.slice(0, lastSlash) : '';
   if (backLink) {
@@ -456,7 +518,6 @@ function renderMarkdownContent(container, markdownText, downloadUrl) {
 
   container.innerHTML = cleanHtml;
 
-  // Rewrite relative image paths so screenshots committed in the repo render properly
   if (downloadUrl) {
     const baseRawDir = downloadUrl.slice(0, downloadUrl.lastIndexOf('/') + 1);
     container.querySelectorAll('img').forEach(img => {
@@ -468,7 +529,6 @@ function renderMarkdownContent(container, markdownText, downloadUrl) {
     });
   }
 
-  // Highlight code blocks
   if (typeof hljs !== 'undefined') {
     container.querySelectorAll('pre code').forEach(block => {
       hljs.highlightElement(block);
@@ -543,7 +603,7 @@ async function fetchGitHubContents(repo, path = '') {
 }
 
 /**
- * Decode UTF-8 text from GitHub API file object (base64 or download_url fallback)
+ * Decode UTF-8 text from GitHub API file object
  */
 async function extractFileText(fileData) {
   if (fileData.content && fileData.encoding === 'base64') {
@@ -562,9 +622,6 @@ async function extractFileText(fileData) {
   return '';
 }
 
-/**
- * Helper to render loading / empty / error boxes safely without innerHTML injection
- */
 function renderStateBox(container, primaryText, secondaryText = '') {
   container.innerHTML = '';
   const box = document.createElement('div');
