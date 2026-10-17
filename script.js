@@ -16,47 +16,49 @@ const CONFIG = Object.freeze({
       title: 'OverTheWire',
       repo: 'overthewire-bandit',
       accent: '#10b981',
-      description: 'Bandit wargame solutions, Linux command-line pipelines, and permissions.'
+      description: 'Bandit wargame writeups'
     }),
     Object.freeze({
       id: 'picoctf',
       title: 'PicoCTF',
       repo: 'picoctf-writeups',
       accent: '#06b6d4',
-      description: 'Writeups and solve scripts across Web, Cryptography, and Forensics.'
+      description: 'PicoCTF challenge writeups'
     }),
     Object.freeze({
       id: 'htb',
       title: 'HackTheBox',
       repo: 'htb-writeups',
       accent: '#9fef00',
-      description: 'Reconnaissance, enumeration, and privilege escalation notes for retired boxes.'
+      description: 'HackTheBox machine & challenge writeups'
     }),
     Object.freeze({
       id: 'tcm-peh',
-      title: 'TCM AD Lab',
+      title: 'TCM Lab',
       repo: 'tcm-ad-homelab',
       accent: '#f43f5e',
-      description: 'Windows Server AD homelab: LLMNR poisoning, AS-REP Roasting, Kerberoasting.'
+      description: 'TCM Ethical Hacking course & lab notes'
     }),
     Object.freeze({
       id: 'leetcode',
       title: 'LeetCode',
       repo: 'leetcode-solutions',
       accent: '#f59e0b',
-      description: 'Daily algorithmic problem solving and data structures in Python.'
+      description: 'Algorithmic problem solutions'
     }),
     Object.freeze({
       id: 'uwr-python',
       title: 'Python (II UWr)',
       repo: 'uwr-python-coursework',
       accent: '#8b5cf6',
-      description: 'Programming assignments and laboratory tasks from Semester 1 at UWr.'
+      description: 'Semester 1 programming coursework'
     })
   ])
 });
 
 const IGNORED_FILES = new Set(['.DS_Store', '.gitkeep', '.gitignore']);
+
+const TRACKED_REPOS = new Set(CONFIG.sections.map(s => s.repo));
 
 const CODE_EXTENSIONS = new Map([
   ['py', 'python'],
@@ -83,6 +85,17 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('hashchange', handleRoute);
   handleRoute();
 });
+
+/**
+ * Filter out system files and empty auto-generated initializer READMEs (< 200B)
+ */
+function isRealEntry(item) {
+  if (!item || IGNORED_FILES.has(item.name)) return false;
+  if (item.type === 'file' && item.name.toLowerCase() === 'readme.md' && item.size < 200) {
+    return false;
+  }
+  return true;
+}
 
 function applyProfileLinks() {
   const githubUrl = `https://github.com/${encodeURIComponent(CONFIG.githubUsername)}`;
@@ -126,7 +139,7 @@ function renderSectionIndexAndTelemetry() {
 
     const metaCol = document.createElement('div');
     metaCol.className = 'repo-row-meta';
-    metaCol.textContent = sec.repo;
+    metaCol.textContent = '0 entries';
 
     row.append(titleCol, descCol, metaCol);
     indexContainer.appendChild(row);
@@ -134,28 +147,27 @@ function renderSectionIndexAndTelemetry() {
     fetchGitHubContents(sec.repo, '')
       .then(items => {
         if (Array.isArray(items)) {
-          const visible = items.filter(i => !IGNORED_FILES.has(i.name));
+          const visible = items.filter(isRealEntry);
           const count = visible.length;
-          metaCol.textContent = `${count} ${count === 1 ? 'file' : 'files'} →`;
+          metaCol.textContent = `${count} ${count === 1 ? 'entry' : 'entries'}`;
           updateProgressBarForSection(sec.id, visible);
         }
       })
       .catch(() => {
-        metaCol.textContent = '0 files';
+        metaCol.textContent = '0 entries';
       });
   });
 }
 
 function updateProgressBarForSection(sectionId, items) {
-  const writeupEntries = items.filter(i => i.name.toLowerCase() !== 'readme.md');
-  const count = writeupEntries.length;
+  const count = items.length;
 
   if (sectionId === 'overthewire') {
     const textEl = document.getElementById('prog-bandit-text');
     const barEl = document.getElementById('prog-bandit-bar');
     if (textEl) textEl.textContent = `${count} / 34`;
     if (barEl) {
-      const pct = Math.max(4, Math.min(100, Math.round((count / 34) * 100)));
+      const pct = Math.max(0, Math.min(100, Math.round((count / 34) * 100)));
       barEl.style.width = `${pct}%`;
     }
   } else if (sectionId === 'picoctf') {
@@ -163,7 +175,7 @@ function updateProgressBarForSection(sectionId, items) {
     const barEl = document.getElementById('prog-pico-bar');
     if (textEl) textEl.textContent = `${count}`;
     if (barEl) {
-      const pct = Math.max(4, Math.min(100, count * 5));
+      const pct = Math.max(0, Math.min(100, count * 5));
       barEl.style.width = `${pct}%`;
     }
   } else if (sectionId === 'htb') {
@@ -171,7 +183,7 @@ function updateProgressBarForSection(sectionId, items) {
     const barEl = document.getElementById('prog-htb-bar');
     if (textEl) textEl.textContent = `${count}`;
     if (barEl) {
-      const pct = Math.max(4, Math.min(100, count * 10));
+      const pct = Math.max(0, Math.min(100, count * 10));
       barEl.style.width = `${pct}%`;
     }
   } else if (sectionId === 'tcm-peh') {
@@ -179,7 +191,7 @@ function updateProgressBarForSection(sectionId, items) {
     const barEl = document.getElementById('prog-tcm-bar');
     if (textEl) textEl.textContent = `${count}`;
     if (barEl) {
-      const pct = Math.max(4, Math.min(100, count * 15));
+      const pct = Math.max(0, Math.min(100, count * 15));
       barEl.style.width = `${pct}%`;
     }
   }
@@ -189,7 +201,7 @@ async function loadGitHubActivityFeed() {
   const feedContainer = document.getElementById('github-activity-feed');
   if (!feedContainer) return;
 
-  const url = `https://api.github.com/users/${encodeURIComponent(CONFIG.githubUsername)}/events/public?per_page=15`;
+  const url = `https://api.github.com/users/${encodeURIComponent(CONFIG.githubUsername)}/events/public?per_page=30`;
 
   try {
     const res = await fetch(url, {
@@ -198,20 +210,37 @@ async function loadGitHubActivityFeed() {
     if (!res.ok) throw new Error(`Status ${res.status}`);
     const events = await res.json();
 
-    const pushEvents = events.filter(e => e.type === 'PushEvent' || e.type === 'CreateEvent').slice(0, 5);
+    // Only show real commits to the 6 tracked repositories (ignore repo initialization commits)
+    const realCommits = [];
+    for (const ev of events) {
+      if (ev.type !== 'PushEvent' || !ev.repo || !ev.repo.name) continue;
+      const repoShort = ev.repo.name.replace(`${CONFIG.githubUsername}/`, '');
+      if (!TRACKED_REPOS.has(repoShort)) continue;
 
-    if (pushEvents.length === 0) {
-      feedContainer.innerHTML = '<p class="muted-note">No recent public commits.</p>';
+      const commits = (ev.payload && Array.isArray(ev.payload.commits)) ? ev.payload.commits : [];
+      const nonInitCommits = commits.filter(c => c.message && !c.message.startsWith('chore: initialize repository'));
+      if (nonInitCommits.length > 0) {
+        realCommits.push({
+          repoShort,
+          fullRepo: ev.repo.name,
+          message: nonInitCommits[nonInitCommits.length - 1].message.split('\n')[0],
+          createdAt: ev.created_at
+        });
+      }
+      if (realCommits.length >= 5) break;
+    }
+
+    if (realCommits.length === 0) {
+      feedContainer.innerHTML = '<p class="muted-note">No commits yet.</p>';
       return;
     }
 
     feedContainer.innerHTML = '';
 
-    pushEvents.forEach(ev => {
+    realCommits.forEach(entry => {
       const item = document.createElement('a');
       item.className = 'activity-item';
-      const repoShort = ev.repo && ev.repo.name ? ev.repo.name.replace(`${CONFIG.githubUsername}/`, '') : 'repo';
-      item.href = `https://github.com/${ev.repo ? ev.repo.name : CONFIG.githubUsername}`;
+      item.href = `https://github.com/${entry.fullRepo}`;
       item.target = '_blank';
       item.rel = 'noopener noreferrer';
 
@@ -220,30 +249,23 @@ async function loadGitHubActivityFeed() {
 
       const repoEl = document.createElement('span');
       repoEl.className = 'activity-repo';
-      repoEl.textContent = repoShort;
+      repoEl.textContent = entry.repoShort;
 
       const timeEl = document.createElement('span');
       timeEl.className = 'activity-time';
-      timeEl.textContent = formatRelativeTime(ev.created_at);
+      timeEl.textContent = formatRelativeTime(entry.createdAt);
 
       topLine.append(repoEl, timeEl);
 
       const msgEl = document.createElement('div');
       msgEl.className = 'activity-msg';
-      if (ev.type === 'PushEvent' && ev.payload && Array.isArray(ev.payload.commits) && ev.payload.commits.length > 0) {
-        const lastCommit = ev.payload.commits[ev.payload.commits.length - 1];
-        msgEl.textContent = lastCommit.message.split('\n')[0];
-      } else if (ev.type === 'CreateEvent') {
-        msgEl.textContent = `Initialized ${ev.payload.ref_type || 'repository'}`;
-      } else {
-        msgEl.textContent = 'Pushed update';
-      }
+      msgEl.textContent = entry.message;
 
       item.append(topLine, msgEl);
       feedContainer.appendChild(item);
     });
   } catch (_) {
-    feedContainer.innerHTML = '<p class="muted-note">Could not load events.</p>';
+    feedContainer.innerHTML = '<p class="muted-note">No commits yet.</p>';
   }
 }
 
@@ -357,7 +379,7 @@ async function loadSectionView(section, dirPath) {
       return;
     }
 
-    const filtered = items.filter(item => !IGNORED_FILES.has(item.name));
+    const filtered = items.filter(isRealEntry);
 
     if (filtered.length === 0) {
       renderStateBox(filesContainer, 'No entries in this repository yet.');
@@ -549,7 +571,7 @@ function renderSourceCodeContent(container, codeText, ext) {
 async function fetchGitHubContents(repo, path = '') {
   const cleanPath = path ? `/${encodePathSegments(path)}` : '';
   const apiUrl = `https://api.github.com/repos/${encodeURIComponent(CONFIG.githubUsername)}/${encodeURIComponent(repo)}/contents${cleanPath}`;
-  const cacheKey = `gh_cache:${CONFIG.githubUsername}/${repo}:${path}`;
+  const cacheKey = `gh_cache_v7:${CONFIG.githubUsername}/${repo}:${path}`;
 
   try {
     const cached = sessionStorage.getItem(cacheKey);
