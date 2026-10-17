@@ -10,228 +10,214 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 
+  <!-- TOP NAVBAR -->
   <header class="site-header">
-    <div class="container header-inner">
-      <a href="#/" class="site-brand">Kamil</a>
+    <div class="layout-shell header-inner">
+      <a href="#/" class="site-brand">kamil</a>
 
-      <nav aria-label="Primary navigation" class="main-nav">
-        <ul class="nav-list">
-          <li><a href="#/" class="nav-link active" data-nav="home" id="nav-home">Overview</a></li>
-          <li><a href="#/section/overthewire" class="nav-link" data-nav="overthewire">OverTheWire</a></li>
-          <li><a href="#/section/picoctf" class="nav-link" data-nav="picoctf">PicoCTF</a></li>
-          <li><a href="#/section/htb" class="nav-link" data-nav="htb">HackTheBox</a></li>
-          <li><a href="#/section/tcm-peh" class="nav-link" data-nav="tcm-peh">TCM Lab</a></li>
-          <li><a href="#/section/leetcode" class="nav-link" data-nav="leetcode">LeetCode</a></li>
-        </ul>
+      <nav aria-label="Primary navigation" class="top-nav">
+        <a href="#/" class="nav-link active" data-nav="home">Overview</a>
+        <a href="#/section/overthewire" class="nav-link" data-nav="overthewire">OverTheWire</a>
+        <a href="#/section/picoctf" class="nav-link" data-nav="picoctf">PicoCTF</a>
+        <a href="#/section/htb" class="nav-link" data-nav="htb">HackTheBox</a>
+        <a href="#/section/tcm-peh" class="nav-link" data-nav="tcm-peh">TCM Lab</a>
+        <a href="#/section/leetcode" class="nav-link" data-nav="leetcode">LeetCode</a>
       </nav>
-
-      <div class="header-actions">
-        <a href="https://github.com/KamilMONTANA" target="_blank" rel="noopener noreferrer" class="header-link" id="nav-github">GitHub ↗</a>
-      </div>
     </div>
   </header>
 
-  <main class="container main-content">
+  <!-- TWO-COLUMN WORKSPACE LAYOUT -->
+  <div class="layout-shell workspace-grid">
 
-    <!-- VIEW 1: HOME -->
-    <section id="view-home" class="view active" aria-labelledby="about-heading">
-
-      <!-- ABOUT ME -->
-      <div class="hero-card">
-        <h1 id="about-heading">Hi, I'm Kamil.</h1>
-        <p class="about-text">
-          First-year Computer Science (B.Eng.) student at the <strong>University of Wrocław (II UWr)</strong>. 
-          This site collects my security writeups across <strong>OverTheWire</strong>, <strong>PicoCTF</strong>, <strong>HackTheBox</strong>, and <strong>Active Directory labs</strong>, along with my daily <strong>LeetCode</strong> solutions and <strong>Python</strong> coursework.
+    <!-- LEFT SIDEBAR: BIO, LINKS & PROGRESS -->
+    <aside class="sidebar">
+      <div class="sidebar-block">
+        <h1 class="author-name">Kamil</h1>
+        <p class="author-role">CS Undergraduate @ II UWr</p>
+        <p class="author-bio">
+          First-year Computer Science (B.Eng.) student at the University of Wrocław. Documenting CTF writeups, Active Directory labs, LeetCode solutions, and Python coursework.
         </p>
 
-        <div class="profile-links">
-          <a href="https://github.com/KamilMONTANA" target="_blank" rel="noopener noreferrer" class="pill-link pill-blue" id="hero-github">
-            GitHub ↗
+        <ul class="external-links">
+          <li>
+            <a href="https://github.com/KamilMONTANA" target="_blank" rel="noopener noreferrer" id="hero-github">
+              <span>github.com/KamilMONTANA</span>
+              <span>↗</span>
+            </a>
+          </li>
+          <li>
+            <a href="https://app.hackthebox.com" target="_blank" rel="noopener noreferrer" id="hero-htb">
+              <span>app.hackthebox.com</span>
+              <span>↗</span>
+            </a>
+          </li>
+          <li>
+            <a href="https://leetcode.com/u/KamilMONTANA/" target="_blank" rel="noopener noreferrer" id="hero-leetcode">
+              <span>leetcode.com/KamilMONTANA</span>
+              <span>↗</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-block">
+        <h2 class="sidebar-heading">Security &amp; CTF Progress</h2>
+        <div class="progress-list">
+          <div class="progress-item">
+            <div class="progress-top">
+              <span class="progress-name">OverTheWire: Bandit</span>
+              <span class="progress-val" id="prog-bandit-text">0 / 34</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill fill-emerald" id="prog-bandit-bar" style="width: 4%;"></div>
+            </div>
+          </div>
+
+          <div class="progress-item">
+            <div class="progress-top">
+              <span class="progress-name">PicoCTF</span>
+              <span class="progress-val" id="prog-pico-text">0</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill fill-cyan" id="prog-pico-bar" style="width: 4%;"></div>
+            </div>
+          </div>
+
+          <div class="progress-item">
+            <div class="progress-top">
+              <span class="progress-name">HackTheBox</span>
+              <span class="progress-val" id="prog-htb-text">0</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill fill-lime" id="prog-htb-bar" style="width: 4%;"></div>
+            </div>
+          </div>
+
+          <div class="progress-item">
+            <div class="progress-top">
+              <span class="progress-name">TCM AD Lab</span>
+              <span class="progress-val" id="prog-tcm-text">0</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill fill-rose" id="prog-tcm-bar" style="width: 4%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-block">
+        <h2 class="sidebar-heading">Recent Commits</h2>
+        <div id="github-activity-feed" class="activity-feed">
+          <p class="muted-note">Loading commits...</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- RIGHT MAIN COLUMN -->
+    <main class="main-column">
+
+      <!-- VIEW 1: OVERVIEW -->
+      <section id="view-home" class="view active" aria-label="Overview">
+
+        <!-- REPOSITORIES INDEX (CLEAN DIRECTORY TABLE/LIST) -->
+        <div class="content-section">
+          <div class="section-head">
+            <h2>Repositories &amp; Writeups</h2>
+          </div>
+          <div id="sections-grid" class="repo-index" role="list">
+            <!-- Populated from CONFIG in script.js -->
+          </div>
+        </div>
+
+        <!-- TELEMETRY: GITHUB HEATMAP & LEETCODE -->
+        <div class="content-section">
+          <div class="section-head">
+            <h2>Activity &amp; LeetCode Stats</h2>
+          </div>
+
+          <div class="telemetry-stack">
+            <div class="telemetry-block">
+              <div class="telemetry-label">GitHub Contributions</div>
+              <div class="heatmap-wrap">
+                <img
+                  src="https://ghchart.rshah.org/10b981/KamilMONTANA"
+                  alt="KamilMONTANA's GitHub Contribution Chart"
+                  class="heatmap-img"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+
+            <div class="telemetry-block">
+              <div class="telemetry-label">
+                <span>LeetCode</span>
+                <a href="#/section/leetcode" class="inline-action">Browse solutions →</a>
+              </div>
+              <div class="leetcard-wrap">
+                <img
+                  src="https://leetcard.jacoblin.cool/KamilMONTANA?theme=dark&font=JetBrains%20Mono&ext=heatmap"
+                  alt="LeetCode Statistics for KamilMONTANA"
+                  class="telemetry-img"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- VIEW 2: SECTION DIRECTORY BROWSER -->
+      <section id="view-section" class="view" hidden aria-labelledby="section-title">
+        <div class="section-top-header">
+          <div>
+            <div class="section-nav-line">
+              <a href="#/" class="back-link">Overview</a>
+              <span class="sep">/</span>
+              <h1 id="section-title">Section</h1>
+            </div>
+            <p id="section-description" class="section-desc"></p>
+          </div>
+          <a href="#" target="_blank" rel="noopener noreferrer" id="section-repo-link" class="ext-repo-link">
+            GitHub repo ↗
           </a>
-          <a href="https://app.hackthebox.com" target="_blank" rel="noopener noreferrer" class="pill-link pill-lime" id="hero-htb">
-            HackTheBox ↗
-          </a>
-          <a href="https://leetcode.com/u/KamilMONTANA/" target="_blank" rel="noopener noreferrer" class="pill-link pill-amber" id="hero-leetcode">
-            LeetCode ↗
-          </a>
-        </div>
-      </div>
-
-      <!-- SECTION SHORTCUTS GRID -->
-      <div class="sections-block">
-        <div class="section-header-row">
-          <h2 class="section-heading">Writeups &amp; Repositories</h2>
         </div>
 
-        <div id="sections-grid" class="sections-grid" role="list">
-          <!-- Populated dynamically from CONFIG in script.js -->
-        </div>
-      </div>
-
-      <!-- STATS & ACTIVITY -->
-      <div class="dashboard-block">
-        <div class="section-header-row">
-          <h2 class="section-heading">Progress &amp; Activity</h2>
-        </div>
-
-        <div class="stats-grid">
-          <!-- PANEL 1: SECURITY PROGRESS -->
-          <div class="stat-panel panel-htb">
-            <div class="panel-header">
-              <h3>Security &amp; CTF Progress</h3>
-              <a href="https://app.hackthebox.com" target="_blank" rel="noopener noreferrer" class="panel-ext" id="panel-htb-link">HackTheBox ↗</a>
-            </div>
-
-            <div class="progress-list">
-              <div class="progress-item">
-                <div class="progress-top">
-                  <span class="progress-name">OverTheWire: Bandit</span>
-                  <span class="progress-val" id="prog-bandit-text">0 / 34</span>
-                </div>
-                <div class="progress-bar-bg">
-                  <div class="progress-bar-fill fill-emerald" id="prog-bandit-bar" style="width: 6%;"></div>
-                </div>
-              </div>
-
-              <div class="progress-item">
-                <div class="progress-top">
-                  <span class="progress-name">PicoCTF</span>
-                  <span class="progress-val" id="prog-pico-text">0 writeups</span>
-                </div>
-                <div class="progress-bar-bg">
-                  <div class="progress-bar-fill fill-cyan" id="prog-pico-bar" style="width: 6%;"></div>
-                </div>
-              </div>
-
-              <div class="progress-item">
-                <div class="progress-top">
-                  <span class="progress-name">HackTheBox</span>
-                  <span class="progress-val" id="prog-htb-text">0 machines</span>
-                </div>
-                <div class="progress-bar-bg">
-                  <div class="progress-bar-fill fill-lime" id="prog-htb-bar" style="width: 6%;"></div>
-                </div>
-              </div>
-
-              <div class="progress-item">
-                <div class="progress-top">
-                  <span class="progress-name">TCM Active Directory Lab</span>
-                  <span class="progress-val" id="prog-tcm-text">0 notes</span>
-                </div>
-                <div class="progress-bar-bg">
-                  <div class="progress-bar-fill fill-rose" id="prog-tcm-bar" style="width: 6%;"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- PANEL 2: LEETCODE -->
-          <div class="stat-panel panel-leetcode">
-            <div class="panel-header">
-              <h3>LeetCode</h3>
-              <a href="#/section/leetcode" class="panel-ext">Solutions →</a>
-            </div>
-
-            <div class="visual-cards-stack">
-              <img
-                src="https://leetcard.jacoblin.cool/KamilMONTANA?theme=dark&font=JetBrains%20Mono&ext=heatmap"
-                alt="LeetCode Statistics for KamilMONTANA"
-                class="telemetry-img"
-                loading="lazy"
-              />
-            </div>
+        <div class="browser-toolbar">
+          <nav id="section-breadcrumbs" class="breadcrumbs" aria-label="Directory path"></nav>
+          <div class="search-wrap">
+            <label for="file-search-input" class="sr-only">Filter files</label>
+            <input type="search" id="file-search-input" class="file-search" placeholder="Filter files...">
           </div>
         </div>
 
-        <!-- PANEL 3: GITHUB ACTIVITY & CONTRIBUTIONS -->
-        <div class="activity-row">
-          <div class="stat-panel panel-commits">
-            <div class="panel-header">
-              <h3>Recent Commits</h3>
-            </div>
-            <div id="github-activity-feed" class="activity-feed">
-              <div class="state-box"><p>Loading recent commits...</p></div>
-            </div>
-          </div>
+        <div id="section-files" class="file-browser" aria-live="polite"></div>
+      </section>
 
-          <div class="stat-panel panel-heatmap">
-            <div class="panel-header">
-              <h3>GitHub Contributions</h3>
-            </div>
-            <div class="heatmap-wrap">
-              <img
-                src="https://ghchart.rshah.org/10b981/KamilMONTANA"
-                alt="KamilMONTANA's GitHub Contribution Chart"
-                class="heatmap-img"
-                loading="lazy"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </section>
-
-    <!-- VIEW 2: SECTION DIRECTORY BROWSER -->
-    <section id="view-section" class="view" hidden aria-labelledby="section-title">
-      <div class="view-topbar">
-        <a href="#/" class="back-link">← Overview</a>
-        <a href="#" target="_blank" rel="noopener noreferrer" id="section-repo-link" class="ext-repo-link">
-          View on GitHub ↗
-        </a>
-      </div>
-
-      <div class="section-banner" id="section-banner">
-        <h1 id="section-title">Section</h1>
-        <p id="section-description" class="section-desc"></p>
-      </div>
-
-      <div class="browser-toolbar">
-        <nav id="section-breadcrumbs" class="breadcrumbs" aria-label="Directory path"></nav>
-        <div class="search-wrap">
-          <label for="file-search-input" class="sr-only">Filter files</label>
-          <input type="search" id="file-search-input" class="file-search" placeholder="Filter files..." aria-label="Filter files in this directory">
-        </div>
-      </div>
-
-      <div id="section-files" class="file-browser" aria-live="polite">
-      </div>
-    </section>
-
-    <!-- VIEW 3: MARKDOWN / CODE WRITEUP READER -->
-    <section id="view-reader" class="view" hidden aria-labelledby="reader-filepath">
-      <div class="view-topbar">
-        <a href="#/" id="reader-back-link" class="back-link">← Back</a>
-        <a href="#" target="_blank" rel="noopener noreferrer" id="reader-github-link" class="ext-repo-link">
-          Raw on GitHub ↗
-        </a>
-      </div>
-
-      <div class="reader-frame">
-        <div class="reader-frame-header">
+      <!-- VIEW 3: MARKDOWN / CODE WRITEUP READER -->
+      <section id="view-reader" class="view" hidden aria-labelledby="reader-filepath">
+        <div class="view-topbar">
+          <a href="#/" id="reader-back-link" class="back-link">← Back</a>
           <span id="reader-filepath" class="reader-filepath">file.md</span>
+          <a href="#" target="_blank" rel="noopener noreferrer" id="reader-github-link" class="ext-repo-link">
+            Raw ↗
+          </a>
         </div>
-        <article id="reader-content" class="markdown-body" aria-live="polite">
-        </article>
-      </div>
-    </section>
 
-  </main>
+        <article id="reader-content" class="markdown-body" aria-live="polite"></article>
+      </section>
 
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <span>Kamil · II UWr</span>
-      <a href="https://github.com/KamilMONTANA" target="_blank" rel="noopener noreferrer" class="footer-link">github.com/KamilMONTANA</a>
-    </div>
-  </footer>
+    </main>
+
+  </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.1/marked.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-  <script src="script.js?v=5"></script>
+  <script src="script.js?v=6"></script>
 </body>
 </html>

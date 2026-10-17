@@ -1,5 +1,5 @@
 /**
- * Portfolio & Writeups Hub — Live GitHub REST API Reader & Telemetry
+ * Portfolio & Writeups Hub — Two-Column Workspace & Live GitHub REST API Reader
  */
 
 const CONFIG = Object.freeze({
@@ -16,42 +16,42 @@ const CONFIG = Object.freeze({
       title: 'OverTheWire',
       repo: 'overthewire-bandit',
       accent: '#10b981',
-      description: 'Linux command-line fundamentals, Bandit wargame solutions, shell pipelines, and file permissions.'
+      description: 'Bandit wargame solutions, Linux command-line pipelines, and permissions.'
     }),
     Object.freeze({
       id: 'picoctf',
       title: 'PicoCTF',
       repo: 'picoctf-writeups',
       accent: '#06b6d4',
-      description: 'Challenge walkthroughs and solve scripts across Web Exploitation, Cryptography, and Forensics.'
+      description: 'Writeups and solve scripts across Web, Cryptography, and Forensics.'
     }),
     Object.freeze({
       id: 'htb',
       title: 'HackTheBox',
       repo: 'htb-writeups',
       accent: '#9fef00',
-      description: 'Reconnaissance, enumeration, and privilege escalation documentation for retired HTB boxes.'
+      description: 'Reconnaissance, enumeration, and privilege escalation notes for retired boxes.'
     }),
     Object.freeze({
       id: 'tcm-peh',
-      title: 'TCM Ethical Hacking',
+      title: 'TCM AD Lab',
       repo: 'tcm-ad-homelab',
       accent: '#f43f5e',
-      description: 'Virtualized Windows Server AD homelab notes: LLMNR poisoning, AS-REP Roasting, Kerberoasting, and BloodHound.'
+      description: 'Windows Server AD homelab: LLMNR poisoning, AS-REP Roasting, Kerberoasting.'
     }),
     Object.freeze({
       id: 'leetcode',
       title: 'LeetCode',
       repo: 'leetcode-solutions',
       accent: '#f59e0b',
-      description: 'Daily algorithmic problem solving and data structure implementations in Python (synced via LeetHub).'
+      description: 'Daily algorithmic problem solving and data structures in Python.'
     }),
     Object.freeze({
       id: 'uwr-python',
-      title: 'Python Coursework (II UWr)',
+      title: 'Python (II UWr)',
       repo: 'uwr-python-coursework',
       accent: '#8b5cf6',
-      description: 'Programming assignments, algorithmic exercises, and lab tasks from the University of Wrocław.'
+      description: 'Programming assignments and laboratory tasks from Semester 1 at UWr.'
     })
   ])
 });
@@ -77,7 +77,7 @@ const CODE_EXTENSIONS = new Map([
 
 document.addEventListener('DOMContentLoaded', () => {
   applyProfileLinks();
-  renderSectionCardsAndTelemetry();
+  renderSectionIndexAndTelemetry();
   loadGitHubActivityFeed();
   initSearchFilter();
   window.addEventListener('hashchange', handleRoute);
@@ -86,78 +86,62 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function applyProfileLinks() {
   const githubUrl = `https://github.com/${encodeURIComponent(CONFIG.githubUsername)}`;
-
-  const navGithub = document.getElementById('nav-github');
   const heroGithub = document.getElementById('hero-github');
-  if (navGithub) navGithub.href = githubUrl;
   if (heroGithub) heroGithub.href = githubUrl;
 
   const heroHtb = document.getElementById('hero-htb');
-  const panelHtb = document.getElementById('panel-htb-link');
   if (heroHtb) heroHtb.href = CONFIG.profiles.htb;
-  if (panelHtb) panelHtb.href = CONFIG.profiles.htb;
 
   const heroLeetcode = document.getElementById('hero-leetcode');
   if (heroLeetcode) heroLeetcode.href = CONFIG.profiles.leetcode;
 }
 
-function renderSectionCardsAndTelemetry() {
-  const grid = document.getElementById('sections-grid');
-  if (!grid) return;
+function renderSectionIndexAndTelemetry() {
+  const indexContainer = document.getElementById('sections-grid');
+  if (!indexContainer) return;
 
-  grid.innerHTML = '';
+  indexContainer.innerHTML = '';
 
   CONFIG.sections.forEach(sec => {
-    const card = document.createElement('a');
-    card.href = `#/section/${encodeURIComponent(sec.id)}`;
-    card.className = 'section-card';
-    card.style.setProperty('--card-accent', sec.accent);
-    card.setAttribute('role', 'listitem');
+    const row = document.createElement('a');
+    row.href = `#/section/${encodeURIComponent(sec.id)}`;
+    row.className = 'repo-row';
+    row.style.setProperty('--row-accent', sec.accent);
+    row.setAttribute('role', 'listitem');
 
-    const top = document.createElement('div');
-    top.className = 'card-top';
+    const titleCol = document.createElement('div');
+    titleCol.className = 'repo-row-title';
 
-    const title = document.createElement('div');
-    title.className = 'card-title';
+    const dot = document.createElement('span');
+    dot.className = 'repo-dot';
+
     const titleText = document.createElement('span');
     titleText.textContent = sec.title;
-    const arrow = document.createElement('span');
-    arrow.className = 'card-arrow';
-    arrow.textContent = '→';
-    title.append(titleText, arrow);
 
-    const desc = document.createElement('p');
-    desc.className = 'card-desc';
-    desc.textContent = sec.description;
+    titleCol.append(dot, titleText);
 
-    top.append(title, desc);
+    const descCol = document.createElement('div');
+    descCol.className = 'repo-row-desc';
+    descCol.textContent = sec.description;
 
-    const footer = document.createElement('div');
-    footer.className = 'card-footer';
+    const metaCol = document.createElement('div');
+    metaCol.className = 'repo-row-meta';
+    metaCol.textContent = sec.repo;
 
-    const repoName = document.createElement('span');
-    repoName.className = 'card-repo-name';
-    repoName.textContent = sec.repo;
-
-    const countText = document.createElement('span');
-    countText.className = 'card-count-text';
-    countText.textContent = '';
-
-    footer.append(repoName, countText);
-    card.append(top, footer);
-    grid.appendChild(card);
+    row.append(titleCol, descCol, metaCol);
+    indexContainer.appendChild(row);
 
     fetchGitHubContents(sec.repo, '')
       .then(items => {
         if (Array.isArray(items)) {
           const visible = items.filter(i => !IGNORED_FILES.has(i.name));
           const count = visible.length;
-          countText.textContent = `${count} ${count === 1 ? 'file' : 'files'}`;
+          metaCol.textContent = `${count} ${count === 1 ? 'file' : 'files'} →`;
           updateProgressBarForSection(sec.id, visible);
         }
       })
       .catch(() => {
-        countText.textContent = '0 files';
+        metaCol.textContent = '0 files';
       });
   });
 }
@@ -177,7 +161,7 @@ function updateProgressBarForSection(sectionId, items) {
   } else if (sectionId === 'picoctf') {
     const textEl = document.getElementById('prog-pico-text');
     const barEl = document.getElementById('prog-pico-bar');
-    if (textEl) textEl.textContent = `${count} writeups`;
+    if (textEl) textEl.textContent = `${count}`;
     if (barEl) {
       const pct = Math.max(4, Math.min(100, count * 5));
       barEl.style.width = `${pct}%`;
@@ -185,7 +169,7 @@ function updateProgressBarForSection(sectionId, items) {
   } else if (sectionId === 'htb') {
     const textEl = document.getElementById('prog-htb-text');
     const barEl = document.getElementById('prog-htb-bar');
-    if (textEl) textEl.textContent = `${count} machines`;
+    if (textEl) textEl.textContent = `${count}`;
     if (barEl) {
       const pct = Math.max(4, Math.min(100, count * 10));
       barEl.style.width = `${pct}%`;
@@ -193,7 +177,7 @@ function updateProgressBarForSection(sectionId, items) {
   } else if (sectionId === 'tcm-peh') {
     const textEl = document.getElementById('prog-tcm-text');
     const barEl = document.getElementById('prog-tcm-bar');
-    if (textEl) textEl.textContent = `${count} notes`;
+    if (textEl) textEl.textContent = `${count}`;
     if (barEl) {
       const pct = Math.max(4, Math.min(100, count * 15));
       barEl.style.width = `${pct}%`;
@@ -217,7 +201,7 @@ async function loadGitHubActivityFeed() {
     const pushEvents = events.filter(e => e.type === 'PushEvent' || e.type === 'CreateEvent').slice(0, 5);
 
     if (pushEvents.length === 0) {
-      renderStateBox(feedContainer, 'No recent public commits yet.');
+      feedContainer.innerHTML = '<p class="muted-note">No recent public commits.</p>';
       return;
     }
 
@@ -226,17 +210,23 @@ async function loadGitHubActivityFeed() {
     pushEvents.forEach(ev => {
       const item = document.createElement('a');
       item.className = 'activity-item';
-      const repoShort = ev.repo && ev.repo.name ? ev.repo.name.replace(`${CONFIG.githubUsername}/`, '') : 'repository';
+      const repoShort = ev.repo && ev.repo.name ? ev.repo.name.replace(`${CONFIG.githubUsername}/`, '') : 'repo';
       item.href = `https://github.com/${ev.repo ? ev.repo.name : CONFIG.githubUsername}`;
       item.target = '_blank';
       item.rel = 'noopener noreferrer';
 
-      const left = document.createElement('div');
-      left.className = 'activity-left';
+      const topLine = document.createElement('div');
+      topLine.className = 'activity-top-line';
 
-      const repoEl = document.createElement('div');
+      const repoEl = document.createElement('span');
       repoEl.className = 'activity-repo';
       repoEl.textContent = repoShort;
+
+      const timeEl = document.createElement('span');
+      timeEl.className = 'activity-time';
+      timeEl.textContent = formatRelativeTime(ev.created_at);
+
+      topLine.append(repoEl, timeEl);
 
       const msgEl = document.createElement('div');
       msgEl.className = 'activity-msg';
@@ -246,20 +236,14 @@ async function loadGitHubActivityFeed() {
       } else if (ev.type === 'CreateEvent') {
         msgEl.textContent = `Initialized ${ev.payload.ref_type || 'repository'}`;
       } else {
-        msgEl.textContent = 'Pushed update to main';
+        msgEl.textContent = 'Pushed update';
       }
 
-      left.append(repoEl, msgEl);
-
-      const timeEl = document.createElement('span');
-      timeEl.className = 'activity-time';
-      timeEl.textContent = formatRelativeTime(ev.created_at);
-
-      item.append(left, timeEl);
+      item.append(topLine, msgEl);
       feedContainer.appendChild(item);
     });
   } catch (_) {
-    renderStateBox(feedContainer, 'Could not fetch recent events.');
+    feedContainer.innerHTML = '<p class="muted-note">Could not load events.</p>';
   }
 }
 
@@ -346,14 +330,12 @@ function switchActiveView(viewId) {
 async function loadSectionView(section, dirPath) {
   switchActiveView('view-section');
 
-  const bannerEl = document.getElementById('section-banner');
   const titleEl = document.getElementById('section-title');
   const descEl = document.getElementById('section-description');
   const repoLinkEl = document.getElementById('section-repo-link');
   const searchInput = document.getElementById('file-search-input');
   const filesContainer = document.getElementById('section-files');
 
-  if (bannerEl) bannerEl.style.setProperty('--section-accent', section.accent);
   if (titleEl) titleEl.textContent = section.title;
   if (descEl) descEl.textContent = section.description;
   if (searchInput) searchInput.value = '';
@@ -365,7 +347,7 @@ async function loadSectionView(section, dirPath) {
   renderBreadcrumbs(section, dirPath);
 
   if (!filesContainer) return;
-  renderStateBox(filesContainer, 'Loading files...', `${CONFIG.githubUsername}/${section.repo}`);
+  renderStateBox(filesContainer, 'Loading files...');
 
   try {
     const items = await fetchGitHubContents(section.repo, dirPath);
@@ -402,20 +384,15 @@ async function loadSectionView(section, dirPath) {
         row.href = `#/section/${encodeURIComponent(section.id)}/file/${encodedItemPath}`;
       }
 
-      const left = document.createElement('div');
-      left.className = 'file-row-left';
-
       const name = document.createElement('span');
       name.className = 'file-name';
       name.textContent = item.type === 'dir' ? `${item.name}/` : item.name;
-
-      left.appendChild(name);
 
       const right = document.createElement('span');
       right.className = 'file-row-right';
       right.textContent = item.type === 'dir' ? 'dir' : formatBytes(item.size);
 
-      row.append(left, right);
+      row.append(name, right);
       filesContainer.appendChild(row);
     });
   } catch (err) {
@@ -495,7 +472,7 @@ async function loadReaderView(section, filePath) {
   }
 
   if (!contentEl) return;
-  renderStateBox(contentEl, 'Loading file...', filePath);
+  renderStateBox(contentEl, 'Loading file...');
 
   try {
     const fileData = await fetchGitHubContents(section.repo, filePath);
@@ -623,22 +600,11 @@ async function extractFileText(fileData) {
   return '';
 }
 
-function renderStateBox(container, primaryText, secondaryText = '') {
+function renderStateBox(container, primaryText) {
   container.innerHTML = '';
   const box = document.createElement('div');
   box.className = 'state-box';
-
-  const p = document.createElement('p');
-  p.textContent = primaryText;
-  box.appendChild(p);
-
-  if (secondaryText) {
-    const sub = document.createElement('div');
-    sub.className = 'state-sub';
-    sub.textContent = secondaryText;
-    box.appendChild(sub);
-  }
-
+  box.textContent = primaryText;
   container.appendChild(box);
 }
 
@@ -662,11 +628,11 @@ function formatBytes(bytes) {
 function formatRelativeTime(isoDate) {
   if (!isoDate) return '';
   const diffSec = Math.floor((Date.now() - new Date(isoDate).getTime()) / 1000);
-  if (diffSec < 60) return 'just now';
+  if (diffSec < 60) return 'now';
   const mins = Math.floor(diffSec / 60);
-  if (mins < 60) return `${mins}m ago`;
+  if (mins < 60) return `${mins}m`;
   const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 24) return `${hours}h`;
   const days = Math.floor(hours / 24);
-  return `${days}d ago`;
+  return `${days}d`;
 }
